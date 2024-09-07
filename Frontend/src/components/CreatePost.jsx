@@ -9,6 +9,7 @@ import { Button } from "./ui/button";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import axios from "axios";
+import { useSelector ,useDispatch } from "react-redux";
 
 const CreatePost = ({ open, setOpen }) => {
   const imageRef = useRef();
@@ -16,6 +17,9 @@ const CreatePost = ({ open, setOpen }) => {
   const [caption, setCaption] = useState("");
   const [imagePreview, setImagePreview] = useState("");
   const [loading, setLoading] = useState(false);
+  const {user} = useSelector(store => store.auth)
+  const {post} = useSelector(store => store.post)
+
 
   const fileChangeHandler = async (e) => {
     const file = e.target.files?.[0];
@@ -33,11 +37,16 @@ const CreatePost = ({ open, setOpen }) => {
 
     try {
         setLoading(true)
-      const res = await axios.post("http://localhost:8000/api/v2/post/addpost",formData {
+      const res = await axios.post("http://localhost:8000/api/v2/post/addpost",formData, {
         headers: {
             'Content-Type' : 'multipart/form-dat'
           },withCredentials: true
       });
+      if(res.data.success) {
+        dispatch(setPosts([res.data.post, ...posts ]));
+        toast.success(res.data.message);
+        setOpen(false);
+      }
       
     } catch (error) {
       toast.error(error.response.data.message);
@@ -54,10 +63,10 @@ const CreatePost = ({ open, setOpen }) => {
         </DialogHeader>
         <div className="flex gap-3 items-center">
           <Avatar>
-            <AvatarImage src="" alt="Image" />
+            <AvatarImage src={user?.prfilePicture} alt="Image" />
           </Avatar>
           <div>
-            <h1 className="font-semibold text-xs">Username</h1>
+            <h1 className="font-semibold text-xs">{user?.username}</h1>
             <sapn className="text-gray-600 text-xs">Bio</sapn>
           </div>
         </div>
