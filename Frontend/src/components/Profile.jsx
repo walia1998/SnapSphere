@@ -1,8 +1,13 @@
+import { Avatar, AvatarImage } from '@radix-ui/react-avatar'
 import React from 'react'
 
 const Profile = () => {
   return (
-    <div>Profile</div>
+    <div>
+      <Avatar>
+        <AvatarImage />
+      </Avatar>
+    </div>
   )
 }
 
