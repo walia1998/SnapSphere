@@ -18,7 +18,7 @@ router.route('/logout').post(logout);
 router.route('/:id/profile').get(isAuthentication, getProfile);
 
 // Edit user profile with profile picture upload
-router.route('/profile/edit').post(isAuthentication, upload.single('profilePicture'), editProfile);
+router.route('/profile/edit').post(isAuthentication, upload.single('profilePhoto'), editProfile);
 
 // Get suggested users
 router.route('/suggested').get(isAuthentication, getSuggestedUsers);
