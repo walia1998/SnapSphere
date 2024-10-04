@@ -6,10 +6,13 @@ import connectDB from "./utils/dbs.js";
 import userRoute from './routes/userRoute.js';
 import postRoute from "./routes/postRoute.js";
 import messageRoute from "./routes/messageRoute.js";
+import { app, server} from "./socketIo/socket.js";
+
+
+
 
 dotenv.config({})
 
-const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.get("/", (_,res) => {
@@ -37,7 +40,7 @@ app.use("/api/v2/post", postRoute);
 app.use("/api/v2/message", messageRoute);
 
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
     connectDB();
   console.log(`Server listen at port ${PORT}`);
 });

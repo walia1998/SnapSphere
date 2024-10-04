@@ -18,21 +18,23 @@ export const sendMessage = async (req, res) => {
       });
     }
 
-    const newMassage = await message.create({
+    const newMessage = await message.create({
       senderId,
       recieverId,
       message,
     });
 
-    if (newMessage) conversation.messages.push(newMassage._id);
+    if (newMessage) conversation.messages.push(newMessage._id);
 
-    await Promise.all([conversation.save(), newMassage.save()]);
+    await Promise.all([conversation.save(), newMessage.save()]);
 
     //Implement socket io for real time data transfer
+    const recieverSocketId = getRecevierSocketID(recieverId);
+     
 
     return res.status(201).json({
       success: true,
-      newMassage,
+      newMessage,
     });
   } catch (error) {
     console.log(error);
