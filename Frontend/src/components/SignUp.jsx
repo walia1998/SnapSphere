@@ -25,7 +25,7 @@ const Signup = () => {
         e.preventDefault();
         try {
             setLoading(true);
-            const res = await axios.post('https://instaclone-g9h5.onrender.com/api/v1/user/register', input, {
+            const res = await axios.post('http://localhost:8000/api/v2/user/register', input, {
                 headers: {
                     'Content-Type': 'application/json'
                 },
@@ -42,7 +42,7 @@ const Signup = () => {
             }
         } catch (error) {
             console.log(error);
-            toast.error(error.response.data.message);
+            toast.error(error.response?.data?.message);
         } finally {
             setLoading(false);
         }

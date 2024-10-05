@@ -1,5 +1,5 @@
 import { Dialog, DialogContent } from "@radix-ui/react-dialog";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { DialogHeader } from "./ui/dialog";
 import { Avatar } from "@radix-ui/react-avatar";
 import { AvatarImage } from "./ui/avatar";

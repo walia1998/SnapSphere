@@ -3,6 +3,7 @@ import cloudinary from "../utils/cloudinary.js";
 import {Post} from "../Models/postModel.js";
 import {User} from "../Models/userModel.js"
 import { Comment } from "../Models/commentsModel.js";
+import { getRecevierSocketID, io } from "../socketIo/socket.js";
 
 export const addNewPost = async (req,res) => {
     try {
@@ -106,7 +107,23 @@ export const likePost = async (req,res) => {
         await post.save();
 
 
-        //implementing socket i.o for real time notification 
+         //implementing socket i.o for real time notification 
+
+         const user = await User.findById(likeId).select('username profilepicture');
+        const postOwnerId = post.author.toString();
+        if(postOwnerId !== likeId) {
+            // meit a notification even
+            const notification = {
+                type : 'like',
+                userId : likeId,
+                userDetails: user,
+                postId,
+                message : 'post was liked'
+            }
+            const postOwnerSockedId = getRecevierSocketID(postOwnerId);
+            io.to(postOwnerSockedId0).emit('notification', notification); 
+        }
+
 
   return res.status(200).json({message:'Post liked', success: true})
     } catch (error) {
@@ -130,6 +147,20 @@ export const dislikePost = async (req,res) => {
 
         //implementing socket i.o for real time notification 
 
+         const user = await User.findById(likeId).select('username profilepicture');
+        const postOwnerId = post.author.toString();
+        if(postOwnerId !== likeId) {
+            // meit a notification even
+            const notification = {
+                type : 'Dislike',
+                userId : likeId,
+                userDetails: user,
+                postId,
+                message : 'post was liked'
+            }
+            const postOwnerSockedId = getRecevierSocketID(postOwnerId);
+            io.to(postOwnerSockedId0).emit('notification', notification); 
+        }
 
 
 
@@ -164,7 +195,7 @@ export const addComment = async (req,res) => {
             path:'author',
             select:"username profilePicture"
         });
-
+ 
         post.comments.push(comment._id);
         await post.save();
 

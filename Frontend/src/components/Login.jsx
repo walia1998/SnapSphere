@@ -1,7 +1,6 @@
-
-import React, { useEffect, useState } from 'react'
-import { Input } from './ui/input'
-import { Button } from './ui/button'
+import React, { useEffect, useState } from 'react';
+import { Input } from './ui/input';
+import { Button } from './ui/button';
 import axios from 'axios';
 import { toast } from 'sonner';
 import { Link, useNavigate } from 'react-router-dom';
@@ -15,19 +14,19 @@ const Login = () => {
         password: ""
     });
     const [loading, setLoading] = useState(false);
-    const {user} = useSelector(store=>store.auth);
+    const { user } = useSelector(store => store.auth);
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
     const changeEventHandler = (e) => {
         setInput({ ...input, [e.target.name]: e.target.value });
-    }
+    };
 
     const signupHandler = async (e) => {
         e.preventDefault();
         try {
             setLoading(true);
-            const res = await axios.post('http://localhost:8000/api/v1/user/login', input, {
+            const res = await axios.post('http://localhost:8000/api/v2/user/login', input, {
                 headers: {
                     'Content-Type': 'application/json'
                 },
@@ -35,6 +34,7 @@ const Login = () => {
             });
             if (res.data.success) {
                 dispatch(setAuthUser(res.data.user));
+                console.log("User logged in:", res.data.user); // Debugging line
                 navigate("/");
                 toast.success(res.data.message);
                 setInput({
@@ -44,17 +44,18 @@ const Login = () => {
             }
         } catch (error) {
             console.log(error);
-            toast.error(error.response.data.message);
+            toast.error(error.response?.data?.message || "An error occurred");
         } finally {
             setLoading(false);
         }
-    }
+    };
 
-    useEffect(()=>{
-        if(user){
+    useEffect(() => {
+        if (user) {
             navigate("/");
         }
-    },[])
+    }, [user, navigate]); // Added 'user' to the dependency array
+
     return (
         <div className='flex items-center w-screen h-screen justify-center'>
             <form onSubmit={signupHandler} className='shadow-lg flex flex-col gap-5 p-8'>
@@ -93,10 +94,10 @@ const Login = () => {
                     )
                 }
 
-                <span className='text-center'>Dosent have an account? <Link to="/signup" className='text-blue-600'>Signup</Link></span>
+                <span className='text-center'>Doesn't have an account? <Link to="/signup" className='text-blue-600'>Signup</Link></span>
             </form>
         </div>
-    )
-}
+    );
+};
 
-export default Login
+export default Login;

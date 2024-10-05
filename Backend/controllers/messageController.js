@@ -1,11 +1,11 @@
 import { Conversation } from "../Models/conversationModel.js";
-
+import { getRecevierSocketID } from "../socketIo/socket.js";
+import { Message } from "../Models/messageModel.js";
 export const sendMessage = async (req, res) => {
   try {
     const senderId = req.id;
     const recieverId = req.params.id;
-    const { message } = req.body;
-
+    const { textMessage: message } = req.body;
     let conversation = await Conversation.findOne({
       participants: { $all: [senderId, recieverId] },
     });
@@ -18,7 +18,7 @@ export const sendMessage = async (req, res) => {
       });
     }
 
-    const newMessage = await message.create({
+    const newMessage = await Message.create({
       senderId,
       recieverId,
       message,
@@ -30,7 +30,9 @@ export const sendMessage = async (req, res) => {
 
     //Implement socket io for real time data transfer
     const recieverSocketId = getRecevierSocketID(recieverId);
-     
+    if (recieverId) {
+      io.to(recieverSocketId).emit("newMessage", newMessage);
+    }
 
     return res.status(201).json({
       success: true,
@@ -46,16 +48,16 @@ export const getMessage = async (req, res) => {
     const senderId = req.id;
     const recieverId = req.params.id;
 
-    const conversation = await Conversation.find({
+    const conversation = await Conversation.findOne({
       participants: { $all: [senderId, recieverId] },
-    });
+    }).populate('message');
     if (!conversation) {
-        return res.status(200).json({ success: true, message: [] });
+      return res.status(200).json({ success: true, message: [] });
     }
-      
+
     return res.status(200).json({
       success: true,
-      message: conversation.messages,
+      message: conversation?.messages,
     });
   } catch (error) {
     console.log(error);
