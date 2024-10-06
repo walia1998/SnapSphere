@@ -1,7 +1,6 @@
 import {Server} from "socket.io";
 import express from "express";
 import http from "http";
-import { log } from "console";
 import { Socket } from "dgram";
 const app = express();
 
@@ -9,7 +8,7 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
     cors : {
-        origin : 'hhtp://localhost:5173',
+        origin : 'http://localhost:5173',
         methods : ['GET', 'POST']
     }
 })
