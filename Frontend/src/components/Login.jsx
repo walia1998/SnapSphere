@@ -52,9 +52,10 @@ const Login = () => {
 
     useEffect(() => {
         if (user) {
+            //console.log("Navigating to main page"); // Debugging line
             navigate("/");
         }
-    }, [user, navigate]); // Added 'user' to the dependency array
+    }, []); // Added 'user' to the dependency array
 
     return (
         <div className='flex items-center w-screen h-screen justify-center'>

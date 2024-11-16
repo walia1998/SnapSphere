@@ -5,7 +5,8 @@ import { Socket } from "socket.io-client";
 const socketSlice = createSlice({
     name: 'socketio',
     initialState : {
-        Socket: null
+        //Socket: null
+        isConnected: false, // Track connection status
     },
     reducers : {
         setSocket:(state,action) => {

@@ -1,6 +1,7 @@
-import SignUP from "./components/SignUp";
+
 import Login from "./components/Login";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+
 import MainLayout from "./components/MainLayout";
 import ChatPage from "./components/Chatpage";
 import EditProfile from "./components/EditProfile";
@@ -75,7 +76,7 @@ const  { socket}  = useSelector(store => store.socketio)
   const dispatch = useDispatch();
   useEffect(() => {
     if (user) {
-      const socketio = io("http:localhost:8000", {
+      const socketio = io("http://localhost:8000", {
         query: {
           userId: user?._id,
         },
